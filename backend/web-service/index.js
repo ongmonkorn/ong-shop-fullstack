@@ -1,29 +1,14 @@
 // web-service.js
 import { Router } from 'express';
-import jwt from 'jsonwebtoken';
 import db from '../db.js';
-import bcrypt from 'bcrypt';
 import products from './routes/products.js';
+import users from './routes/users.js';
+import { authenticateToken } from './middleware/auth.js';
 
 const router = Router();
 
 router.use('/', products);
-
-// 🔒 Middleware ตรวจสอบสิทธิ์ความปลอดภัย (JWT Token)
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) {
-        return res.status(401).json({ message: 'กรุณาเข้าสู่ระบบก่อนทำรายการ' });
-    }
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return res.status(403).json({ message: 'Token ไม่ถูกต้องหรือหมดอายุ' });
-        req.user = user;
-        next();
-    });
-};
+router.use('/auth', users);
 
 
 
@@ -62,58 +47,58 @@ router.post('/orders', authenticateToken, async (req, res) => {
     }
 });
 
-// 📝 1. API สมัครสมาชิก (ย้ายมาอยู่ใน router ยุคใหม่)
-router.post('/auth/register', async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const userExist = await db.query('SELECT id FROM users WHERE email = $1', [email]);
-        if (userExist.rows.length > 0) {
-            return res.status(400).json({ message: 'อีเมลนี้ถูกใช้งานไปแล้ว' });
-        }
+// // 📝 1. API สมัครสมาชิก (ย้ายมาอยู่ใน router ยุคใหม่)
+// router.post('/auth/register', async (req, res) => {
+//     const { email, password } = req.body;
+//     try {
+//         const userExist = await db.query('SELECT id FROM users WHERE email = $1', [email]);
+//         if (userExist.rows.length > 0) {
+//             return res.status(400).json({ message: 'อีเมลนี้ถูกใช้งานไปแล้ว' });
+//         }
 
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+//         const saltRounds = 10;
+//         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        const queryText = 'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email, role';
-        const result = await db.query(queryText, [email, hashedPassword]);
+//         const queryText = 'INSERT INTO users (email, password) VALUES ($1, $2) RETURNING id, email, role';
+//         const result = await db.query(queryText, [email, hashedPassword]);
 
-        res.status(201).json({ message: 'สมัครสมาชิกสำเร็จ', user: result.rows[0] });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'เกิดข้อผิดพลาดในการสมัครสมาชิก' });
-    }
-});
+//         res.status(201).json({ message: 'สมัครสมาชิกสำเร็จ', user: result.rows[0] });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'เกิดข้อผิดพลาดในการสมัครสมาชิก' });
+//     }
+// });
 
-// 🔑 2. API เข้าสู่ระบบ (ย้ายมาอยู่ใน router ยุคใหม่)
-router.post('/auth/login', async (req, res) => {
-    const { email, password } = req.body;
-    try {
-        const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
-        if (result.rows.length === 0) {
-            return res.status(400).json({ message: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
-        }
+// // 🔑 2. API เข้าสู่ระบบ (ย้ายมาอยู่ใน router ยุคใหม่)
+// router.post('/auth/login', async (req, res) => {
+//     const { email, password } = req.body;
+//     try {
+//         const result = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+//         if (result.rows.length === 0) {
+//             return res.status(400).json({ message: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
+//         }
 
-        const user = result.rows[0];
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
-        }
+//         const user = result.rows[0];
+//         const isMatch = await bcrypt.compare(password, user.password);
+//         if (!isMatch) {
+//             return res.status(400).json({ message: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' });
+//         }
 
-        const token = jwt.sign(
-            { id: user.id, role: user.role },
-            process.env.JWT_SECRET,
-            { expiresIn: '1d' }
-        );
+//         const token = jwt.sign(
+//             { id: user.id, role: user.role },
+//             process.env.JWT_SECRET,
+//             { expiresIn: '1d' }
+//         );
 
-        res.json({
-            message: 'เข้าสู่ระบบสำเร็จ',
-            token,
-            user: { id: user.id, email: user.email, role: user.role }
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ' });
-    }
-});
+//         res.json({
+//             message: 'เข้าสู่ระบบสำเร็จ',
+//             token,
+//             user: { id: user.id, email: user.email, role: user.role }
+//         });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ message: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ' });
+//     }
+// });
 
 export default router;

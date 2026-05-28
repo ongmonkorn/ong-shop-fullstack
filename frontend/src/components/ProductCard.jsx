@@ -19,10 +19,10 @@ export default function ProductCard({ product, addToCart }) {
                     <img
                         src={getImageUrl(product.image_url)}
                         alt={product.name}
-                        className="w-full h-48 object-cover rounded-xl mb-4 bg-slate-50"
+                        className="w-full h-60 object-cover rounded-xl mb-4 bg-slate-50"
                     />
                 ) : (
-                    <div className="w-full h-48 bg-slate-100 rounded-xl mb-4 flex items-center justify-center text-slate-400">
+                    <div className="w-full h-60 bg-slate-100 rounded-xl mb-4 flex items-center justify-center text-slate-400">
                         ไม่มีรูปภาพ
                     </div>
                 )}
