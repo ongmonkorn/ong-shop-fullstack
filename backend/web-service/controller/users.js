@@ -1,6 +1,6 @@
 // backend/web-service/controller/users.js
 import { Router } from 'express';
-import db from '../../db.js';
+import db from '../db.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 

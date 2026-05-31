@@ -33,6 +33,9 @@ export default function Navbar({ cartCount, onCartClick }) {
               </span>
             )}
           </button>
+          <Link to="/order-history" className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium px-4 py-2 rounded-xl transition-colors flex items-center space-x-2 cursor-pointer">
+            <span>ประวัติการสั่งซื้อ</span>
+          </Link>
 
           {/* 💡 ส่วนเช็กการแสดงผลปุ่ม Auth */}
           {user ? (

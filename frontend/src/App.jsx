@@ -7,6 +7,7 @@ import CartDrawer from './components/CartDrawer'; // <-- 1. Import CartDrawer �
 import ProductDetail from './pages/ProductDetail';
 import Auth from './pages/Auth';
 import Checkout from './pages/Checkout';
+import OrderHistory from './pages/OrderHistory';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -95,6 +96,7 @@ function App() {
           <Route path="/auth" element={<Auth />} />
           <Route path="/checkout" element={<Checkout cart={cart} clearCart={clearCart} />} />
           <Route path="/product/:id" element={<ProductDetail addToCart={addToCart} />} />
+          <Route path="/order-history" element={<OrderHistory />} />
         </Routes>
 
         {/* <-- 5. วาง Component หน้าต่างตะกร้าสินค้าไว้ท้ายสุด */}
