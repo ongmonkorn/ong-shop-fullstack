@@ -8,6 +8,10 @@ import ProductDetail from './pages/ProductDetail';
 import Auth from './pages/Auth';
 import Checkout from './pages/Checkout';
 import OrderHistory from './pages/OrderHistory';
+import Profile from './pages/Profile';
+import ProductAdd from './pages/ProductAdd';
+import AdminProducts from './pages/admin/AdminProducts';
+import AdminProductsEdit from './pages/admin/ProductEdit';
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -18,7 +22,7 @@ function App() {
   });
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/products')
+    fetch('http://localhost:5000/api/products/getproducts')
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.error('Error fetching products:', err));
@@ -97,10 +101,15 @@ function App() {
           <Route path="/checkout" element={<Checkout cart={cart} clearCart={clearCart} />} />
           <Route path="/product/:id" element={<ProductDetail addToCart={addToCart} />} />
           <Route path="/order-history" element={<OrderHistory />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/add-product" element={<ProductAdd />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/product-edit/:id" element={<AdminProductsEdit />} />
         </Routes>
 
         {/* <-- 5. วาง Component หน้าต่างตะกร้าสินค้าไว้ท้ายสุด */}
         <CartDrawer
+
           isOpen={isCartOpen}
           onClose={() => setIsCartOpen(false)}
           cart={cart}

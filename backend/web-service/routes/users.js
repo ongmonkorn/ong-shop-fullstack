@@ -6,7 +6,7 @@ import { authenticateToken } from '../middleware/auth.js'; // 🚨 ดึง Mid
 const router = Router();
 
 // 1. สมัครสมาชิก
-router.post('/register', register);
+router.post('/register', register);                    
 // 2. เข้าสู่ระบบ
 router.post('/login', login);
 // 3. แสดงรายชื่อผู้ใช้ทั้งหมด
