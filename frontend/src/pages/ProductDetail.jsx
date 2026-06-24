@@ -15,8 +15,9 @@ export default function ProductDetail({ addToCart }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        const API_URL = import.meta.env.VITE_API_URL;
         // ยิง API ไปที่หลังบ้านพอร์ต 5000 เพื่อดึงสินค้าตาม ID
-        fetch(`http://localhost:5000/api/products/${id}`)
+        fetch(`${API_URL}/api/products/${id}`)
             .then((res) => {
                 if (!res.ok) throw new Error('ไม่พบสินค้า');
                 return res.json();

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function ProductAdd() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(null); // สำหรับโชว์รูปตัวอย่าง
@@ -19,7 +20,7 @@ export default function ProductAdd() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/categories/get');
+                const res = await fetch(`${API_URL}/api/categories/get`);
                 const data = await res.json();
                 if (res.ok) {
                     setCategories(data);
@@ -61,7 +62,7 @@ export default function ProductAdd() {
             formData.append('category_id', Number(form.category_id));
             formData.append('image', imageFile); // 'image' ต้องชื่อตรงกับที่ multer ฝั่งหลังบ้านรอรับ
 
-            const response = await fetch(`http://localhost:5000/api/products/add-products`, {
+            const response = await fetch(`${API_URL}/api/products/add-products`, {
                 method: 'POST',
                 headers: {
                     // ⚠️ ห้ามใส่ 'Content-Type': 'application/json' เด็ดขาด เบราว์เซอร์จะจัดการ Boundary ให้เองเมื่อใช้ FormData

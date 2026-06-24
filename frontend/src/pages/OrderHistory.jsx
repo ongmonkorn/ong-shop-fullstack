@@ -9,6 +9,7 @@ const getImageUrl = (url) => {
 };
 
 export default function OrderHistory() {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -24,7 +25,7 @@ export default function OrderHistory() {
                     return;
                 }
 
-                const response = await fetch('http://localhost:5000/api/orders/my-orders', {
+                const response = await fetch(`${API_URL}/api/orders/my-orders`, {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -60,7 +61,7 @@ export default function OrderHistory() {
 
             setCancelingId(id); // เปิดโหมดกำลังโหลดเฉพาะปุ่มนี้
 
-            const response = await fetch(`http://localhost:5000/api/orders/${id}/cancel`, {
+            const response = await fetch(`${API_URL}/api/orders/${id}/cancel`, {
                 method: 'PUT', // หรือ PATCH ตามที่หลังบ้านคุณตั้งไว้
                 headers: {
                     'Authorization': `Bearer ${token}`,

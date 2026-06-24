@@ -8,6 +8,7 @@ export default function Checkout({ cart, clearCart }) {
     const [paymentMethod, setPaymentMethod] = useState('โอนเงินผ่านธนาคาร');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -22,7 +23,7 @@ export default function Checkout({ cart, clearCart }) {
 
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:5000/api/orders', {
+            const response = await fetch(`${API_URL}/api/orders`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

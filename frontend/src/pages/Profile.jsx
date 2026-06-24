@@ -7,6 +7,7 @@ export default function Profile() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const API_URL = import.meta.env.VITE_API_URL;
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -23,7 +24,7 @@ export default function Profile() {
                 }
 
                 // 2. ยิง API ไปหาหลังบ้านที่เส้นโปรไฟล์ โดยแนบ Token ไปใน Headers
-                const response = await fetch('http://localhost:5000/api/auth/profile', {
+                const response = await fetch(`${API_URL}/api/auth/profile`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,

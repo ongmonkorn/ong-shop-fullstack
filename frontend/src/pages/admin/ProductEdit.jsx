@@ -5,7 +5,7 @@ import { useNavigate, Link, useParams } from 'react-router-dom';
 export default function ProductEdit() {
     const { id } = useParams(); // 🚨 ดึงค่า ID สินค้าจาก URL (เช่น /product-edit/:id)
     const navigate = useNavigate();
-
+    const API_URL = import.meta.env.VITE_API_URL;
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState([]);
 
@@ -25,11 +25,11 @@ export default function ProductEdit() {
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
-                const catRes = await fetch('http://localhost:5000/api/categories/get');
+                const catRes = await fetch(`${API_URL}/api/categories/get`);
                 const catData = await catRes.json();
                 if (catRes.ok) setCategories(catData);
 
-                const prodRes = await fetch(`http://localhost:5000/api/products/${id}`);
+                const prodRes = await fetch(`${API_URL}/api/products/${id}`);
                 const prodData = await prodRes.json();
 
                 if (prodRes.ok) {
@@ -104,7 +104,7 @@ export default function ProductEdit() {
             }
 
             // 🚨 ยิง PUT หรือ POST ไปอัปเดตตามที่หลังบ้านน้าออกแบบไว้ (แนะนำส่งพ่วงเลข ID ไปด้วยครับ)
-            const response = await fetch(`http://localhost:5000/api/products/update-products/${id}`, {
+            const response = await fetch(`${API_URL}/api/products/update-products/${id}`, {
                 method: 'PUT', // หรือ 'POST' ตามหลังบ้านน้าเลยครับ
                 headers: {
                     'Authorization': token ? `Bearer ${token}` : ''

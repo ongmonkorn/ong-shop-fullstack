@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 export default function AdminProducts() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const API_URL = import.meta.env.VITE_API_URL;
 
     const getImageUrl = (url) => {
     if (!url) return '';
@@ -19,7 +20,7 @@ export default function AdminProducts() {
         try {
             setLoading(true);
             // 🚨 ปรับ URL ตรงนี้ให้ตรงกับพิกัดดึงสินค้าทั้งหมดของน้านะครับ (เช่น /api/products/get หรือ /api/products)
-            const res = await fetch('http://localhost:5000/api/products/getproducts'); 
+            const res = await fetch(`${API_URL}/api/products/getproducts`); 
             const data = await res.json();
             if (res.ok) {
                 setProducts(data);
@@ -48,7 +49,7 @@ export default function AdminProducts() {
         try {
             const token = localStorage.getItem('ong_shop_token');
             // 🚨 ปรับ URL ยิงไปลบสินค้าตามของหลังบ้านน้า เช่น /api/products/delete/${id}
-            const res = await fetch(`http://localhost:5000/api/products/delete-products/${id}`, {
+            const res = await fetch(`${API_URL}/api/products/delete-products/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': token ? `Bearer ${token}` : ''
