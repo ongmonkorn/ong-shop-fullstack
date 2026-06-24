@@ -14,7 +14,7 @@ const products = async (req, res) => {
         res.json(result.rows);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'ควยยยยยย' });
+        res.status(500).json({ message: 'เรียกข้อมูลสินค้าไม่สำเร็จ' });
     }
 }
 
