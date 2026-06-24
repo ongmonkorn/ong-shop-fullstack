@@ -56,7 +56,7 @@ const login = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ' });
+        res.status(500).json({ message: 'ควยยยยย' });
     }
 };
 
