@@ -125,78 +125,91 @@ export default function ProductEdit() {
     };
 
     return (
-        <div className='max-w-4xl mx-auto px-4 py-12'>
-            <Link to="/admin/products" className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 mb-8 transition-colors">
-                ← กลับสู่ระบบจัดการสินค้า
-            </Link>
+    // 📱 ปรับระยะขอบซ้าย-ขวา (px) ให้ยืดหยุ่นตามหน้าจอ (มือถือเว้นน้อย, คอมเว้นเยอะ)
+    <div className='max-w-4xl mx-auto px-3 sm:px-6 py-6 sm:py-12 animate-fadeIn'>
+        
+        <Link to="/admin/products" className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 mb-6 sm:mb-8 transition-colors">
+            ← กลับสู่ระบบจัดการสินค้า
+        </Link>
 
-            <div className='bg-white p-8 rounded-3xl border border-slate-200 shadow-sm'>
-                <h2 className="text-3xl font-black text-slate-800 text-center mb-6">✏️ แก้ไขข้อมูลสินค้า</h2>
+        {/* 📱 ตัวกล่อง: บนมือถือลด Padding เหลือ p-5 พอ จะได้ไม่กินพื้นที่ / บนคอมขยายเป็น p-8 */}
+        <div className='bg-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl border border-slate-200 shadow-sm'>
+            
+            {/* 📱 หัวข้อ: บนมือถืออักษรขนาด text-2xl พอ / บนคอมขยายไป text-3xl */}
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-800 text-center mb-6">✏️ แก้ไขข้อมูลสินค้า</h2>
 
-                <form onSubmit={handleSubmit} className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                    <div className='flex flex-col gap-2'>
-                        <label htmlFor="name" className="text-sm font-semibold text-slate-700">ชื่อสินค้า *</label>
-                        <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600" required />
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <label htmlFor="description" className="text-sm font-semibold text-slate-700">รายละเอียด</label>
-                        <input type="text" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600" />
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <label htmlFor="price" className="text-sm font-semibold text-slate-700">ราคา *</label>
-                        <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600" required />
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <label htmlFor="stock" className="text-sm font-semibold text-slate-700">สต็อก *</label>
-                        <input type="number" value={form.stock} onChange={(e) => setForm({ ...form, stock: e.target.value })} className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600" required />
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <label htmlFor="category" className="text-sm font-semibold text-slate-700">หมวดหมู่ *</label>
-                        <select
-                            id="category"
-                            value={form.category_id}
-                            onChange={(e) => setForm({ ...form, category_id: e.target.value })}
-                            className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600 text-slate-800"
-                            required
-                        >
-                            <option value="">-- เลือกหมวดหมู่ --</option>
-                            {categories.map((cat) => (
-                                <option key={cat.id} value={cat.id}>
-                                    {cat.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+            {/* 📱 ฟอร์ม: บนมือถือ (ต่ำกว่า md) จะเรียงแถวเดี่ยว 1 คอลัมน์ดิ่งลงมา / จอ md ขึ้นไปจะหักเป็น 2 คอลัมน์คู่กัน */}
+            <form onSubmit={handleSubmit} className='grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5'>
+                
+                <div className='flex flex-col gap-1.5'>
+                    <label htmlFor="name" className="text-sm font-semibold text-slate-700">ชื่อสินค้า *</label>
+                    <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600 text-base" required />
+                </div>
 
-                    <div className='flex flex-col gap-2'>
-                        <label htmlFor="image_file" className="text-sm font-semibold text-slate-700">เปลี่ยนรูปภาพสินค้า (ปล่อยว่างได้ถ้าไม่เปลี่ยน)</label>
-                        <input
-                            type="file"
-                            id="image_file"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            className="w-full border border-slate-200 rounded-xl px-4 py-2.5 text-slate-600 bg-slate-50 file:mr-4 file:py-1.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                        />
-                    </div>
+                <div className='flex flex-col gap-1.5'>
+                    <label htmlFor="description" className="text-sm font-semibold text-slate-700">รายละเอียด</label>
+                    <input type="text" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600 text-base" />
+                </div>
 
-                    {/* กล่องโชว์พรีวิวรูปภาพ (ถ้ามีข้อมูลจะดึงรูปเก่ามาแปะรอไว้ก่อนทันที) */}
-                    {imagePreview && (
-                        <div className="col-span-1 md:col-span-2 flex flex-col items-center gap-2 p-4 border border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-                            <span className="text-xs text-slate-500">รูปภาพปัจจุบันของสินค้า:</span>
-                            <img src={imagePreview} alt="Preview" className="h-32 w-32 object-cover rounded-xl shadow-sm border border-white" />
-                        </div>
-                    )}
+                <div className='flex flex-col gap-1.5'>
+                    <label htmlFor="price" className="text-sm font-semibold text-slate-700">ราคา *</label>
+                    <input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600 text-base" required />
+                </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className={`col-span-2 w-full text-white font-bold px-8 py-4 rounded-xl transition-all duration-300 text-center shadow-lg flex items-center justify-center gap-2
-                            ${loading ? 'bg-blue-400 cursor-not-allowed shadow-none' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer shadow-blue-100'}`}
+                <div className='flex flex-col gap-1.5'>
+                    <label htmlFor="stock" className="text-sm font-semibold text-slate-700">สต็อก *</label>
+                    <input type="number" value={form.stock} onChange={(e) => setForm({ ...form, stock: e.target.value })} className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600 text-base" required />
+                </div>
+
+                <div className='flex flex-col gap-1.5'>
+                    <label htmlFor="category" className="text-sm font-semibold text-slate-700">หมวดหมู่ *</label>
+                    <select
+                        id="category"
+                        value={form.category_id}
+                        onChange={(e) => setForm({ ...form, category_id: e.target.value })}
+                        className="w-full border border-slate-200 rounded-xl px-4 py-3 bg-slate-50 focus:outline-blue-600 text-slate-800 text-base"
+                        required
                     >
-                        {loading ? 'กำลังบันทึกข้อมูลแก้ไข...' : '✏️ ยืนยันแก้ไขสินค้า'}
-                    </button>
-                </form>
-            </div>
+                        <option value="">-- เลือกหมวดหมู่ --</option>
+                        {categories.map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                                {cat.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className='flex flex-col gap-1.5'>
+                    <label htmlFor="image_file" className="text-sm font-semibold text-slate-700">เปลี่ยนรูปภาพสินค้า (ปล่อยว่างได้)</label>
+                    <input
+                        type="file"
+                        id="image_file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        // 📱 ปรับแต่งกระดุมเลือกไฟล์ของตัว Input ให้กดง่ายขึ้นบนจอมือถือ
+                        className="w-full border border-slate-200 rounded-xl px-3 sm:px-4 py-2 text-sm text-slate-600 bg-slate-50 file:mr-3 file:py-1.5 file:px-3 sm:file:px-4 file:rounded-xl file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                    />
+                </div>
+
+                {/* กล่องโชว์พรีวิวรูปภาพ (แก้คลาสให้บนมือถือยืดเต็มความกว้าง บนคอมล็อกขนาดขนาด) */}
+                {imagePreview && (
+                    <div className="col-span-1 md:col-span-2 flex flex-col items-center gap-2 p-4 border border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+                        <span className="text-xs text-slate-500">รูปภาพปัจจุบันของสินค้า:</span>
+                        <img src={imagePreview} alt="Preview" className="h-32 w-32 sm:h-40 sm:w-40 object-cover rounded-xl shadow-sm border-2 border-white" />
+                    </div>
+                )}
+
+                {/* 📱 ปุ่มกดเซฟ: บนมือถือขยายเต็มกว้าง col-span-1 และบนจอใหญ่จะคลุม col-span-2 */}
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className={`col-span-1 md:col-span-2 w-full text-white font-bold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl transition-all duration-300 text-center shadow-lg flex items-center justify-center gap-2 text-base
+                        ${loading ? 'bg-blue-400 cursor-not-allowed shadow-none' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer shadow-blue-100'}`}
+                >
+                    {loading ? 'กำลังบันทึกข้อมูลแก้ไข...' : '✏️ ยืนยันแก้ไขสินค้า'}
+                </button>
+            </form>
         </div>
-    );
+    </div>
+);
 }
