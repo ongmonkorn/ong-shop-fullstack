@@ -41,21 +41,25 @@ const productById = async (req, res) => {
 }
 
 
+// ในไฟล์ controller/products.js -> ฟังก์ชัน addProduct
 const addProduct = async (req, res) => {
     try {
-        // 💡 คราวนี้ req.body จะแตกตัวแปรออกมาได้สบายๆ ไม่ขึ้น undefined แล้วครับ
         const { name, price, description, category_id, stock } = req.body;
 
-        // ตรวจสอบว่ามีไฟล์รูปถูกส่งมาด้วยไหม
         if (!req.file) {
             return res.status(400).json({ message: 'กรุณาเลือกรูปภาพสินค้าด้วยครับ' });
         }
 
-        const filename = req.file.filename; // ได้ชื่อไฟล์ เช่น 1717800000.jpg
+        // 🚨 🛠️ แก้ไขบรรทัดนี้: ดึงค่าลิงก์เต็มที่พ่วง R2_PUBLIC_URL มาเรียบร้อยแล้วผ่าน .location ครับน้า
+        const filename = `${process.env.R2_PUBLIC_URL}/${req.file.key}`;
 
-        // น้าเอาค่าเหล่านี้ไปเขียนคำสั่ง SQL บันทึกลงฐานข้อมูล (db.query) ต่อได้เลยครับ...
-        // ตัวอย่าง:
-        const result = await db.query('INSERT INTO products (name, price, description, image_url, category_id, stock) VALUES ($1, $2, $3, $4, $5, $6)', [name, price, description, filename, category_id, stock]);
+        // คำสั่ง SQL ยิงเข้าฐานข้อมูล Neon คราวนี้ลิงก์ยาวตัวเต็มจะวิ่งเข้าไปนอนในเบสแน่นอนครับ
+        const result = await db.query(
+            `INSERT INTO products (name, price, description, image_url, category_id, stock) 
+             VALUES ($1, $2, $3, $4, $5, $6) 
+             RETURNING *`,
+            [name, Number(price), description, filename, Number(category_id), Number(stock)]
+        );
 
         res.status(201).json({ message: "เพิ่มสินค้าสำเร็จ", filename, product: result.rows[0] });
 
@@ -85,24 +89,23 @@ const deleteProduct = async (req, res) => {
 }
 // backend/web-service/controller/products.js
 
+// ในไฟล์ controller/products.js -> ฟังก์ชัน updateProduct
 const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
         const { name, description, price, stock, category_id, old_image } = req.body;
 
-        // 🚨 1. จุดดักจับชื่อไฟล์ภาพ:
-        // ถ้ามีการอัปโหลดรูปใหม่เข้ามา (req.file จะมีค่า) -> ให้ใช้ชื่อไฟล์ใหม่ที่ Multer ตั้งให้
-        // แต่ถ้าแอดมินไม่ได้กดเปลี่ยนรูปเลย (req.file จะไม่มีค่า) -> ให้ใช้ชื่อรูปเดิม (old_image) ที่หน้าบ้านส่งมาค้ำไว้
+        // 🚨 🛠️ แก้ไขตรงนี้: สลับมาดึง .location แทนพาร์ทแบบเก่าครับน้าอง
         let imageName = old_image;
         if (req.file) {
-            imageName = req.file.filename;
+            imageName = `${process.env.R2_PUBLIC_URL}/${req.file.key}`; // ลิงก์เต็มจาก Cloudflare R2 บินมาลงตรงนี้เลยครับ
         }
 
-        // 🚨 2. ตอนเขียนคำสั่ง SQL UPDATE ต้องเอาตัวแปร imageName ใส่เข้าไปในคอลัมน์รูปภาพด้วยครับน้า
-        // ตัวอย่าง:
         const result = await db.query(
-            `UPDATE products SET name=$1, description=$2, price=$3, stock=$4, category_id=$5, image_url=$6 WHERE id=$7`,
-            [name, description, price, stock, category_id, imageName, id]
+            `UPDATE products 
+             SET name=$1, description=$2, price=$3, stock=$4, category_id=$5, image_url=$6 
+             WHERE id=$7`,
+            [name, description, Number(price), Number(stock), Number(category_id), imageName, Number(id)]
         );
 
         return res.status(200).json({ success: true, message: 'แก้ไขข้อมูลสินค้าสำเร็จ' });
@@ -112,4 +115,5 @@ const updateProduct = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
 export { products, productById, addProduct, deleteProduct, updateProduct }

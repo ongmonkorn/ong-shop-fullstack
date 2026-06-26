@@ -49,7 +49,7 @@ export default function CartDrawer({ isOpen, onClose, cart, updateQuantity, remo
           ) : (
             cart.map(item => (
               <div key={item.id} className="flex space-x-4 border-b border-slate-50 pb-4">
-                <img src={getImageUrl(item.image_url)} className="w-20 h-20 object-cover rounded-lg bg-slate-100" />
+                <img src={item.image_url} className="w-20 h-20 object-cover rounded-lg bg-slate-100" />
                 <div className="flex-1">
                   <h4 className="font-bold text-slate-800">{item.name}</h4>
                   <p className="text-blue-600 font-bold">฿{Number(item.price).toLocaleString()}</p>

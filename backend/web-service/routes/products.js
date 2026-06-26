@@ -1,31 +1,32 @@
+
 import { Router } from 'express';
 import { products, productById, addProduct, deleteProduct, updateProduct } from '../controller/products.js';
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url'; // 🚨 อิมพอร์ตตัวนี้เพิ่มเข้ามาช่วยหาฐานพิกัดครับน้า
+import { S3Client } from '@aws-sdk/client-s3';
+import multerS3 from 'multer-s3';
+
 
 const router = Router();
 
-// 🚨 1. สร้างฐานที่ตั้งล็อกตำแหน่งไฟล์ปัจจุบัน (ระบบ ESM)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// 🚨 2. ตั้งค่าการเซฟไฟล์ด้วยพิกัดล็อกเป้าแม่นยำ
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // ใช้ path.resolve ถอยหลังจากตำแหน่งไฟล์นี้เพื่อวิ่งไปหาโฟลเดอร์ frontend ตรงๆ 
-        // สังเกตจากโค้ดเดิมของน้า ถอยออก 3 ชั้น จะถึงโฟลเดอร์รวมด้านนอกสุดพอดีครับ
-        const dir = path.resolve(__dirname, '../../../frontend/src/assets/imgs');
-        
-        // ตัวช่วยกันเหนียว: ถ้าวันดีคืนดีโฟลเดอร์เกิดหายไป ให้ระบบสร้างขึ้นมาใหม่ทันที
-        if (!fs.existsSync(dir)){
-            fs.mkdirSync(dir, { recursive: true });
-        }
-        cb(null, dir);
+const s3 = new S3Client({
+    region: "auto",
+    endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    credentials: {
+        accessKeyId: process.env.R2_ACCESS_KEY_ID,
+        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
     },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
+});
+
+
+const storage = multerS3({
+    s3: s3,
+    bucket: 'ong-shop-bucket',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    publicUrl: (req, file) => process.env.R2_PUBLIC_URL,
+    key: function (req, file, cb) {
+        const uniqueName = Date.now() + path.extname(file.originalname);
+        cb(null, uniqueName);
     }
 });
 

@@ -41,23 +41,24 @@ export default function ProductEdit() {
                         category_id: prodData.category_id || ''
                     });
 
-                    setOldImageName(prodData.image_url);
+                    // ⚡ 1. บันทึกลิงก์รูปภาพตัวเต็มเดิมไว้ค้ำประกันกรณีแอดมินไม่ยอมเปลี่ยนรูป
+                    setOldImageName(prodData.image_url || '');
 
-                    // 🚨 🛠️ แก้ไขตรงนี้: ดึงรูปจากโฟลเดอร์ในฝั่ง Frontend ของน้าเอง
+                    // ⚡ 2. 🛠️ แก้ไขจุดนี้: เพราะใน Neon เก็บลิงก์ยาวของ Cloudflare แล้ว 
+                    // น้าสั่งโยนลิงก์ url ตัวเต็มเข้าไปแสดงผลในพรีวิวตรงๆ ได้เลยครับ ไม่ต้องงมหาโฟลเดอร์ในคอมแล้วครับน้า!
                     if (prodData.image_url) {
-                        // ใช้คำสั่งนี้สั่งให้ Vite ไปคุ้ยรูปในโฟลเดอร์ src/assets/imgs/ ตามชื่อไฟล์ในเบสครับ
-                        const imagePath = new URL(`../../assets/imgs/${prodData.image_url}`, import.meta.url).href;
-                        setImagePreview(imagePath);
+                        setImagePreview(prodData.image_url);
                     }
                 }
             } catch (error) {
                 console.error('Failed to fetch initial data:', error);
             }
         };
+
         const role = localStorage.getItem('user_role');
         if (role !== 'admin') {
             alert('❌ ไม่มีสิทธิ์เข้าถึงหน้านี้');
-            navigate('../../'); // เด้งลูกค้าทั่วไปกลับหน้าแรกทันที
+            navigate('../../');
         } else {
             fetchInitialData();
         }
@@ -94,13 +95,12 @@ export default function ProductEdit() {
             formData.append('stock', Number(form.stock));
             formData.append('category_id', Number(form.category_id));
 
-            // 💡 จุดสำคัญเรื่องรูปภาพ:
+            // 1. ส่งลิงก์รูปภาพเดิมไปให้หลังบ้านรับรู้เสมอ (ห้ามใส่ไว้ใน else)
+            formData.append('old_image', oldImageName || '');
+
+            // 2. ถ้าแอดมินมีการเลือกไฟล์ภาพใหม่ ค่อยแนบไฟล์ภาพใหม่เพิ่มเข้าไปแยกอีกฟิลด์หนึ่ง
             if (imageFile) {
-                // ถ้าแอดมินเลือกรูปใหม่ -> ส่งไฟล์รูปภาพใหม่ไป
                 formData.append('image', imageFile);
-            } else {
-                // ถ้าแอดมินไม่ได้เปลี่ยนรูป -> ส่งชื่อรูปเดิมกลับไปบอกหลังบ้านเพื่อไม่ต้องเซฟทับ
-                formData.append('old_image', oldImageName);
             }
 
             // 🚨 ยิง PUT หรือ POST ไปอัปเดตตามที่หลังบ้านน้าออกแบบไว้ (แนะนำส่งพ่วงเลข ID ไปด้วยครับ)

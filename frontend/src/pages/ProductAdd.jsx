@@ -76,6 +76,7 @@ export default function ProductAdd() {
 
             alert('➕ เพิ่มสินค้าและบันทึกรูปภาพเรียบร้อย!');
             navigate('/');
+            window.location.reload();
         } catch (error) {
             alert(error.message);
         } finally {

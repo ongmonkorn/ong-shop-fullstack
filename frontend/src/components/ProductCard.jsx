@@ -2,30 +2,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Helper function to resolve dynamic image paths in Vite
-const getImageUrl = (url) => {
-    if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
-        return url;
-    }
-    return new URL(`../assets/imgs/${url}`, import.meta.url).href;
-};
 
 export default function ProductCard({ product, addToCart }) {
     return (
         <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow">
             <div>
-                {product.image_url ? (
-                    <img
-                        src={getImageUrl(product.image_url)}
-                        alt={product.name}
-                        className="w-full h-60 object-cover rounded-xl mb-4 bg-slate-50"
-                    />
-                ) : (
-                    <div className="w-full h-60 bg-slate-100 rounded-xl mb-4 flex items-center justify-center text-slate-400">
-                        ไม่มีรูปภาพ
-                    </div>
-                )}
+                <img
+                    src={product.image_url || 'https://placehold.co/300x300?text=No+Image'}
+                    alt={product.name}
+                    className="w-full h-48 object-cover rounded-xl"
+                />
                 <span className="text-xs font-semibold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full">
                     {product.category_name || 'ทั่วไป'}
                 </span>

@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 // ฟังก์ชันแปลงพาธรูปภาพที่เราเคยเขียนคอมเมนต์ไว้
-const getImageUrl = (url) => {
-    if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
-    return new URL(`../assets/imgs/${url}`, import.meta.url).href;
-};
+// const getImageUrl = (url) => {
+//     if (!url) return '';
+//     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
+//     return new URL(`../assets/imgs/${url}`, import.meta.url).href;
+// };
 
 export default function ProductDetail({ addToCart }) {
     const { id } = useParams(); // ดึง ID สินค้ามาจาก URL (เช่น /product/1)
@@ -49,7 +49,7 @@ export default function ProductDetail({ addToCart }) {
                 <div className="w-full">
                     {product.image_url ? (
                         <img 
-                            src={getImageUrl(product.image_url)} 
+                            src={product.image_url} 
                             alt={product.name} 
                             className="w-full h-auto max-h-[500px] object-cover rounded-2xl bg-slate-50 border border-slate-100"
                         />
