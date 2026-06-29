@@ -8,19 +8,19 @@ export default function AdminProducts() {
     const API_URL = import.meta.env.VITE_API_URL;
 
     const getImageUrl = (url) => {
-    if (!url) return '';
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
-        return url;
-    }
-    return new URL(`../../assets/imgs/${url}`, import.meta.url).href;
-};
+        if (!url) return '';
+        if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+            return url;
+        }
+        return new URL(`../../assets/imgs/${url}`, import.meta.url).href;
+    };
 
     // 1. ดึงรายการสินค้าทั้งหมดจากหลังบ้านมาโชว์ในตาราง
     const fetchProducts = async () => {
         try {
             setLoading(true);
             // 🚨 ปรับ URL ตรงนี้ให้ตรงกับพิกัดดึงสินค้าทั้งหมดของน้านะครับ (เช่น /api/products/get หรือ /api/products)
-            const res = await fetch(`${API_URL}/api/products/getproducts`); 
+            const res = await fetch(`${API_URL}/api/products/getproducts`);
             const data = await res.json();
             if (res.ok) {
                 setProducts(data);
@@ -44,7 +44,7 @@ export default function AdminProducts() {
 
     // 2. ฟังก์ชันสำหรับกดลบสินค้า
     const handleDelete = async (id, name) => {
-        if (!window.confirm(`คุณน้าแน่ใจใช่ไหมครับที่จะลบสินค้า: "${name}" ?`)) return;
+        if (!window.confirm(`คุณแน่ใจใช่ไหมครับที่จะลบสินค้า: "${name}" ?`)) return;
 
         try {
             const token = localStorage.getItem('ong_shop_token');
@@ -77,8 +77,8 @@ export default function AdminProducts() {
                     <p className="text-sm text-slate-500 mt-1">ดูรายการสินค้า แก้ไข และลบข้อมูลสินค้าในร้าน</p>
                 </div>
                 {/* ปุ่มกดลิงก์วิ่งไปหน้าเพิ่มสินค้าที่น้าทำไว้แล้ว */}
-                <Link 
-                    to="/add-product" 
+                <Link
+                    to="/add-product"
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-3 rounded-xl transition-all shadow-lg shadow-blue-100 flex items-center gap-2"
                 >
                     ➕ เพิ่มสินค้าใหม่
@@ -111,9 +111,9 @@ export default function AdminProducts() {
                                     <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
                                         {/* รูปภาพสินค้าดึงจาก Path ใหม่ที่เราเพิ่งจัดระเบียบกัน */}
                                         <td className="p-4 flex justify-center">
-                                            <img 
+                                            <img
                                                 src={getImageUrl(item.image_url)}
-                                                alt={item.name} 
+                                                alt={item.name}
                                                 className="w-12 h-12 object-cover rounded-lg border border-slate-200 bg-slate-100"
                                                 onError={(e) => { e.target.src = 'https://placehold.co/100x100?text=No+Image'; }} // กันเหนียวถ้ารูปไหนพัง
                                             />
@@ -138,13 +138,13 @@ export default function AdminProducts() {
                                         {/* ปุ่มแก้ไข และ ปุ่มลบ */}
                                         <td className="p-4 text-center">
                                             <div className="flex justify-center gap-2">
-                                                <Link 
+                                                <Link
                                                     to={`/admin/product-edit/${item.id}`}
                                                     className="border border-slate-200 hover:border-blue-600 hover:text-blue-600 px-3 py-1.5 rounded-lg transition-colors font-medium text-xs bg-white"
                                                 >
                                                     📝 แก้ไข
                                                 </Link>
-                                                <button 
+                                                <button
                                                     onClick={() => handleDelete(item.id, item.name)}
                                                     className="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg transition-colors font-medium text-xs"
                                                 >
