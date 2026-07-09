@@ -102,6 +102,10 @@ export default function Auth() {
           >
             {isLogin ? 'ยังไม่มีบัญชี? สมัครสมาชิกที่นี่' : 'มีบัญชีอยู่แล้ว? เข้าสู่ระบบที่นี่'}
           </button>
+          <div className='text-sm font-medium'>
+            <p className='text-slate-600'>สำหรับทดสอบระบบแอดมิน</p>
+            <p className='text-slate-600'>admin@gmail.com / 12345678</p>
+          </div>
         </div>
       </div>
     </div>
