@@ -29,7 +29,7 @@ export default function Navbar({ cartCount, onCartClick }) {
   };
 
   return (
-    <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 h-16">
+    <nav className="bg-blue-500 border-b border-slate-200 sticky top-0 z-50 h-16">
       <div className="max-w-6xl mx-auto px-3 sm:px-4 h-full flex items-center justify-between relative">
 
         {/* ========================================================================================= */}
@@ -64,7 +64,7 @@ export default function Navbar({ cartCount, onCartClick }) {
         {/* 🏪 โลโก้ร้าน (จะถูกซ่อนอัตโนมัติถ้าพื้นที่จอมือถือเล็กมากและเปิดเสิร์ชอยู่) */}
         <Link to="/" className="flex items-center space-x-1.5 shrink-0">
           <span className="text-xl sm:text-2xl">🛒</span>
-          <span className="text-lg sm:text-xl font-black text-slate-800 tracking-tight">Ong Shop</span>
+          <span className="text-lg sm:text-xl font-black text-white tracking-tight">Ong Shop</span>
         </Link>
 
         {/* ========================================================================================= */}
@@ -117,13 +117,13 @@ export default function Navbar({ cartCount, onCartClick }) {
             <div className="relative border-l border-slate-200 pl-1.5 sm:pl-3">
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center gap-1 sm:gap-1.5 p-1 rounded-full hover:bg-slate-50 transition-all duration-200 border border-slate-200 cursor-pointer focus:outline-none"
+                className="flex bg-white items-center gap-1 sm:gap-1.5 p-1 rounded-full hover:bg-blue-200 transition-all duration-200 border border-slate-200 cursor-pointer focus:outline-none"
               >
                 <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full text-white font-black flex items-center justify-center text-xs shadow-sm
-                  ${userRole === 'admin' ? 'bg-amber-500' : 'bg-blue-600'}`}>
+                  ${userRole === 'admin' ? 'bg-amber-300' : 'bg-blue-300'}`}>
                   {userRole === 'admin' ? '⚙️' : user?.email?.charAt(0).toUpperCase()}
                 </div>
-                <span className="hidden sm:inline text-xs font-bold text-slate-700 max-w-[80px] truncate">
+                <span className="hidden sm:inline text-xs font-bold text-slate-800 max-w-[80px] truncate">
                   {userRole === 'admin' ? 'แอดมิน' : user.email}
                 </span>
                 <svg

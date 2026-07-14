@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export default function ProductCard({ product, addToCart }) {
     return (
     // ตัวการ์ด: ปรับ Padding (p-4 บนมือถือ / p-5 บนคอม) เพื่อไม่ให้บีบพื้นที่ด้านในเกินไป
-    <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow h-full">
+    <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-shadow h-full hover:bg-blue-100">
         <div>
             {/* รูปภาพสินค้า: บนมือถือลดความสูงเหลือ h-40 เพื่อความสมดุล / บนคอมขยายเป็น h-48 */}
             <img
